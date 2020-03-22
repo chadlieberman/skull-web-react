@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Provider, connect } from 'react-redux'
 import App from './App'
 
-import { moveCard, flipCard, addPlayer, removePlayer, setName } from '../actions'
+import { moveCard, flipCard, flipMat, addPlayer, removePlayer, setName } from '../actions'
 
 class Container extends React.Component {
     constructor(props) {
@@ -32,7 +32,8 @@ Container = connect(
             flipCard: (card_id) => dispatch(flipCard(card_id)),
             addPlayer: (player_number, name) => dispatch(addPlayer(player_number, name)),
             removePlayer: (player_number) => dispatch(removePlayer(player_number)),
-            setName: (name) => dispatch(setName(name))
+            setName: (name) => dispatch(setName(name)),
+            flipMat: (mat_id) => dispatch(flipMat(mat_id)),
         }
     }
 )(Container)

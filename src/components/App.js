@@ -183,8 +183,8 @@ class GetName extends React.Component {
     }
 }
 
-const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, player_number, flipCard, moveCard }) => {
-    const { player, hand, stack } = player_section
+const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, player_number, flipCard, moveCard, flipMat }) => {
+    const { player, hand, stack, mat } = player_section
     return (
         <div className='player-section'>
             <Stack
@@ -192,6 +192,9 @@ const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, pla
                 cards={stack}
                 moveCard={moveCard}
                 flipCard={flipCard}
+            />
+            <Mat {...mat}
+                flipMat={flipMat}
             />
             <Seat
                 player={player}
@@ -211,7 +214,23 @@ const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, pla
     )
 }
 
-let App = ({me, room, game, moveCard, flipCard, addPlayer, removePlayer, setName}) => {
+const Mat = ({id, color, is_flipped, flipMat}) => {
+    const onDoubleClick = () => {
+        flipMat(id)
+    }
+    return (
+        <div className={`mat ${color}`} onDoubleClick={onDoubleClick}>
+            {is_flipped && (
+                <img src={'/static/img/mat-flipped.png'} />
+            )}
+            {!is_flipped && (
+                <img src={'/static/img/mat-unflipped.png'} />
+            )}
+        </div>
+    )
+}
+
+let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer, setName}) => {
     if (me.name === null) {
         return (
             <GetName setName={setName} />
@@ -237,15 +256,17 @@ let App = ({me, room, game, moveCard, flipCard, addPlayer, removePlayer, setName
         return {
             player,
             hand: hands[idx],
-            stack: stacks[idx]
+            stack: stacks[idx],
+            mat: mats[`mat_${idx}`]
         }
     })
+    console.log('player_sections =', player_sections)
     return (
         <div id='app'>
             <div id='main'>
                 {player_sections.map((player_section, player_number) => {
                     const is_me = me.player_number === player_number
-                    return <PlayerSection player_section={player_section} is_me={is_me} me={me} addPlayer={addPlayer} removePlayer={removePlayer} player_number={player_number} key={player_number} moveCard={moveCard} flipCard={flipCard} />
+                    return <PlayerSection player_section={player_section} is_me={is_me} me={me} addPlayer={addPlayer} removePlayer={removePlayer} player_number={player_number} key={player_number} moveCard={moveCard} flipCard={flipCard} flipMat={flipMat} />
                 })}
             </div>
             <div id='sidebar'>
@@ -253,8 +274,8 @@ let App = ({me, room, game, moveCard, flipCard, addPlayer, removePlayer, setName
                 <div id='room-container'>
                     <h2>Room</h2>
                     <ul id='members'>
-                        {room.members.map((member) => (
-                            <li>
+                        {room.members.map((member, idx) => (
+                            <li key={idx}>
                                 <img src={'/static/img/fa-user.png'} /><span>{member}</span>
                             </li>
                         ))}

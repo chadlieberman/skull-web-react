@@ -58,7 +58,7 @@ const STACK_RE = /player-(?<player_number>\d)-stack/
 const HAND_RE = /player-(?<player_number>\d)-hand-(?<hand_position>\d)/
 
 const game = (state = initial_state, action) => {
-    let discards, hands, stacks, first_open_pos, found, players
+    let discards, hands, stacks, first_open_pos, found, players, mats
     const { player_number, name, card_id, to_position, mat_id } = action
     switch (action.type) {
 
@@ -126,14 +126,9 @@ const game = (state = initial_state, action) => {
             })
 
         case 'FLIP_MAT':
-            return Object.assign({}, state, {
-                mats: mats.map(mat => {
-                    if (mat.id === mat_id) {
-                        mat.is_flipped = !mat.is_flipped
-                    }
-                    return mat
-                })
-            })
+            mats = state.mats
+            mats[mat_id].is_flipped = !mats[mat_id].is_flipped
+            return Object.assign({}, state, { mats })
 
         default:
             return state

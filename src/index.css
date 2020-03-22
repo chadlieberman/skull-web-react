@@ -40,7 +40,7 @@ button:hover {
     min-width: 120px;
 }
 
-.player-section > div {
+.player-section > div:not(.mat) {
     width: 90%;
 }
 
@@ -96,8 +96,8 @@ button:hover {
 .stack {
     margin: 5px;
     width: 60px;
-    height: 320px;
-    background-color: gray;
+    height: 280px;
+    background-color: #dadada;
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
@@ -139,6 +139,13 @@ button:hover {
     max-width: 70%;
     max-height: 70%;
     pointer-events: none;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
 }
 
 .card img.is_me {
@@ -160,6 +167,32 @@ button:hover {
     height: 15px;
     width: auto;
     margin: 5px;
+}
+
+.mat {
+    width: 60px;
+    height: 60px;
+    box-shadow: 1px 2px #ababab;
+    position: relative;
+}
+
+.mat img {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    max-width: 70%;
+    max-height: 70%;
+    pointer-events: none;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
 }
 
 .green {
