@@ -44,11 +44,14 @@ const initial_state = {
     }, {}),
     stacks: Array(6).fill([])
 }
-// empty_hands = Array(6).fill(Array(4).fill(null)),
 
 const removeCard = (removed_card_id) => (card_id) => {
     if (card_id === null){ return null }
     return card_id === removed_card_id ? null : card_id
+}
+
+const filterOutCard = (removed_card_id) => (card_id) => {
+    return card_id !== removed_card_id
 }
 
 const STACK_RE = /player-(?<player_number>\d)-stack/
@@ -90,18 +93,18 @@ const game = (state = initial_state, action) => {
             hands = state.hands.map(hand => {
                 return hand.map(removeCard(card_id))
             })
-            stacks = state.stacks.map(removeCard(card_id))
+            stacks = state.stacks.map(stack => {
+                return stack.filter(filterOutCard(card_id))
+            })
             // Put the card in it's to_position
             if (to_position.includes('discard')) {
                 first_open_pos = discards.findIndex(el => el === null)
                 discards[first_open_pos] = card_id
             } else if (to_position.includes('stack')) {
                 found = to_position.match(STACK_RE)
-                let { player_number } = found
-                let stack = stacks[player_number]
-                first_open_pos = stack.findIndex(el => el === null)
-                stack[first_open_pos] = card_id
-                stacks[player_number] = stack
+                let { player_number } = found.groups
+                console.log('player_number', player_number)
+                stacks[player_number].push(card_id)
             } else if (to_position.includes('hand')) {
                 found = to_position.match(HAND_RE)
                 let { player_number, hand_position } = found.groups
@@ -109,6 +112,7 @@ const game = (state = initial_state, action) => {
             } else {
                 console.error(`Could not move card ${card_id} to ${to_position}`)
             }
+            console.log('stacks =', stacks)
             return Object.assign({}, state, {
                 discards,
                 hands,
