@@ -2,6 +2,8 @@ import express from 'express'
 import http from 'http'
 import path from 'path'
 import socketIO from 'socket.io'
+import { combineReducers, createStore } from 'redux'
+import game from './src/reducers/game'
 
 let app = express()
 const server = http.Server(app)
@@ -20,6 +22,9 @@ app.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, 'build/index.html'))
 })
 
+const store = createStore(
+    combineReducers({ game })
+)
 
 const handleDisconnect = (socket) => () => {
     console.log('disconnection', socket.id)
@@ -33,11 +38,10 @@ const handleAction = (socket) => (action) => {
             connections[socket.id].name = action.name
             return
         default:
+            store.dispatch(action)
             console.log('sending action', action, 'to others')
             socket.broadcast.emit('action', action)
     }
-    // Dispatch action to update server game state
-    //store.dispatch(action)
 }
 
 const handleConnect = (socket) => {
@@ -45,6 +49,11 @@ const handleConnect = (socket) => {
     connections[socket.id] = { socket, name: null }
     socket.on('disconnect', handleDisconnect(socket))
     socket.on('action', handleAction(socket))
+    const state = store.getState()
+    socket.emit('action', {
+        type: 'REPLACE_GAME_STATE',
+        game: state.game
+    })
 }
 
 io.on('connection', handleConnect)
@@ -57,8 +66,9 @@ server.listen(PORT, () => {
         console.log('connections =', Object.entries(connections).map(([k,v]) => {
             return [k, v.name]
         }))
+        console.log('game =', store.getState())
 //        io.sockets.emit('message', 'hi!')
 //        counter += 1
-    }, 2000)
+    }, 3000)
 })
 

@@ -71,6 +71,9 @@ const game = (state = initial_state, action) => {
     const { player_number, name, card_id, to_position, mat_id } = action
     switch (action.type) {
 
+        case 'REPLACE_GAME_STATE':
+            return Object.assign({}, state, {...action.game})
+
         case 'ADD_PLAYER':
             players = state.players
             players[player_number] = {

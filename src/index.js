@@ -12,7 +12,6 @@ const store = createStore(
     applyMiddleware(
         thunkMiddleware,
         logger,
-        //sendAction
     )
 )
 
