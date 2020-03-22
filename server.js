@@ -58,7 +58,6 @@ const handleAction = (socket) => (action) => {
 }
 
 const handleConnect = (socket) => {
-    console.log('new connection', socket.id)
     connections[socket.id] = { socket, name: null }
     socket.on('disconnect', handleDisconnect(socket))
     socket.on('action', handleAction(socket))
@@ -74,15 +73,5 @@ io.on('connection', handleConnect)
 
 server.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`)
-//    let counter = 0
-    setInterval(() => {
-//        console.log(`emitting message ${counter}`)
-        console.log('connections =', Object.entries(connections).map(([k,v]) => {
-            return [k, v.name]
-        }))
-        console.log('game =', store.getState())
-//        io.sockets.emit('message', 'hi!')
-//        counter += 1
-    }, 3000)
 })
 
