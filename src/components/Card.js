@@ -15,24 +15,29 @@ const NullCard = ({ position, moveCard }) => {
     )
 }
 
-const NonNullCard = ({ id, color, type, is_flipped }) => {
+const NonNullCard = ({ id, color, type, is_flipped, flipCard }) => {
     const onDragStart = (e) => {
         e.dataTransfer.setData('draggable_id', e.target.id)
+    }
+    const onDoubleClick = () => {
+        flipCard(id)
     }
     return (
         <div className={`card ${color}`} id={id}
             draggable={true}
             onDragStart={onDragStart}
+            onDoubleClick={onDoubleClick}
         >
+            {is_flipped ? 'F' : 'N'}
         </div>
     )
 }
 
-const Card = ({ position, card, moveCard }) => {
+const Card = ({ position, card, moveCard, flipCard }) => {
     if (card === null) {
         return <NullCard position={position} moveCard={moveCard} />
     } else {
-        return <NonNullCard {...card} />
+        return <NonNullCard {...card} flipCard={flipCard} />
     }
 }
 

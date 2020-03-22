@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardsContainer } from './Card'
 
-const Discards = ({ discards, moveCard }) => {
+const Discards = ({ discards, moveCard, flipCard }) => {
     const onDrop = (e) => {
         e.preventDefault()
         const card_id = e.dataTransfer.getData('draggable_id')
@@ -15,24 +15,32 @@ const Discards = ({ discards, moveCard }) => {
                 onDragOver={(e) => e.preventDefault()}
             >
                 {discards.map((card, idx) => (
-                    <Card card={card} position={`discard-${idx}`} moveCard={moveCard} key={idx} />
+                    <Card card={card} key={idx}
+                        position={`discard-${idx}`}
+                        moveCard={moveCard}
+                        flipCard={flipCard}
+                    />
                 ))}
             </div>
         </div>
     )
 }
 
-const Hand = ({ hand_position, cards, moveCard }) => {
+const Hand = ({ hand_position, cards, moveCard, flipCard }) => {
     return (
         <div className='hand'>
             {cards.map((card, idx) => (
-                <Card card={card} position={`player-${hand_position}-hand-${idx}`} moveCard={moveCard} key={idx} />
+                <Card card={card} key={idx}
+                    position={`player-${hand_position}-hand-${idx}`}
+                    moveCard={moveCard}
+                    flipCard={flipCard}
+                />
             ))}
         </div>
     )
 }
 
-let App = ({game, moveCard}) => {
+let App = ({game, moveCard, flipCard}) => {
     let {discards, players, cards, hands, mats, stacks} = game
     discards = discards.map(card_id => {
         return card_id === null ? null : cards[card_id]
@@ -51,12 +59,12 @@ let App = ({game, moveCard}) => {
                     <h2>Hands</h2>
                     <div id='hands'>
                         {hands.map((hand, idx) => (
-                            <Hand cards={hand} moveCard={moveCard} hand_position={idx} key={idx} />
+                            <Hand cards={hand} moveCard={moveCard} flipCard={flipCard} hand_position={idx} key={idx} />
                         ))}
                     </div>
                 </div>
             </div>
-            <Discards discards={discards} moveCard={moveCard} />
+            <Discards discards={discards} moveCard={moveCard} flipCard={flipCard} />
         </div>
     )
 }

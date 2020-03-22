@@ -77,13 +77,10 @@ const game = (state = initial_state, action) => {
             })
 
         case 'FLIP_CARD':
+            let new_cards = state.cards
+            new_cards[card_id].is_flipped = !new_cards[card_id].is_flipped
             return Object.assign({}, state, {
-                cards: cards.map(card => {
-                    if (card.id === card_id) {
-                        card.is_flipped = !card.is_flipped
-                    }
-                    return card
-                })
+                cards: new_cards
             })
 
         case 'MOVE_CARD':
