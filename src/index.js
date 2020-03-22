@@ -5,7 +5,6 @@ import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './reducers'
 import { Root } from './components/Root'
 import { logger } from './middleware'
-
 import './index.css'
 
 const store = createStore(

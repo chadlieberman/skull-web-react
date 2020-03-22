@@ -25,22 +25,38 @@ let mats = [...Array(6).keys()].map(num => ({
 const initial_state = {
     discards: Array(24).fill(null),
     players: Array(6).fill(null),
-    cards: cards,
-    hands: Array(6).fill(Array(4).fill(null)),
-    mats: mats,
+    cards: cards.reduce((curr, next) => {
+        return Object.assign({}, curr, {
+            [next.id]: next
+        })
+    }, {}),
+    hands: [
+        cards.slice(0, 4).map(card => card.id),
+        cards.slice(4, 8).map(card => card.id),
+        cards.slice(8, 12).map(card => card.id),
+        cards.slice(12, 16).map(card => card.id),
+        cards.slice(16, 20).map(card => card.id),
+        cards.slice(20, 24).map(card => card.id)],
+    mats: mats.reduce((curr, next) => {
+        return Object.assign({}, curr, {
+            [next.id]: next
+        })
+    }, {}),
     stacks: Array(6).fill([])
 }
+// empty_hands = Array(6).fill(Array(4).fill(null)),
 
-const removeCard = (card_id) => (card) => {
-    return card.id == card_id ? null : card
+const removeCard = (removed_card_id) => (card_id) => {
+    if (card_id === null){ return null }
+    return card_id === removed_card_id ? null : card_id
 }
 
-const STACK_RE = /player-(?<player_number>\d)-stack/gi
-const HAND_RE = /player-(?<player_number>\d)-hand-(?<hand_position>\d)/gi
+const STACK_RE = /player-(?<player_number>\d)-stack/
+const HAND_RE = /player-(?<player_number>\d)-hand-(?<hand_position>\d)/
 
 const game = (state = initial_state, action) => {
     let discards, hands, stacks, first_open_pos, found, players
-    const { type, player_number, name, card_id, to_position, mat_id } = action
+    const { player_number, name, card_id, to_position, mat_id } = action
     switch (action.type) {
 
         case 'ADD_PLAYER':
@@ -71,24 +87,27 @@ const game = (state = initial_state, action) => {
             })
 
         case 'MOVE_CARD':
+            console.log('MOVE_CARD', card_id, 'to', to_position)
             // Remove the card from where it is now
             discards = state.discards.map(removeCard(card_id))
-            hands = state.hands.map(removeCard(card_id))
+            hands = state.hands.map(hand => {
+                return hand.map(removeCard(card_id))
+            })
             stacks = state.stacks.map(removeCard(card_id))
             // Put the card in it's to_position
-            if (to_position.contains('discard')) {
-                first_open_pos = discards.find(el => el === null)
+            if (to_position.includes('discard')) {
+                first_open_pos = discards.findIndex(el => el === null)
                 discards[first_open_pos] = card_id
-            } else if (to_position.contains('stack')) {
+            } else if (to_position.includes('stack')) {
                 found = to_position.match(STACK_RE)
                 let { player_number } = found
                 let stack = stacks[player_number]
-                first_open_pos = stack.find(el => el === null)
+                first_open_pos = stack.findIndex(el => el === null)
                 stack[first_open_pos] = card_id
                 stacks[player_number] = stack
-            } else if (to_position.contains('hand')) {
-                found = to_position.match(STACK_RE)
-                let { player_number, hand_position } = found
+            } else if (to_position.includes('hand')) {
+                found = to_position.match(HAND_RE)
+                let { player_number, hand_position } = found.groups
                 hands[player_number][hand_position] = card_id
             } else {
                 console.error(`Could not move card ${card_id} to ${to_position}`)
