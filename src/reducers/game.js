@@ -116,6 +116,7 @@ const game = (state = initial_state, action) => {
                 found = to_position.match(HAND_RE)
                 let { player_number, hand_position } = found.groups
                 hands[player_number][hand_position] = card_id
+                cards[card_id].is_flipped = false
             } else {
                 console.error(`Could not move card ${card_id} to ${to_position}`)
             }
