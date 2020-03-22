@@ -24,16 +24,7 @@ let mats = [...Array(6).keys()].map(num => ({
 
 const initial_state = {
     discards: [],
-    players: [
-        null,
-        null,
-        {
-            name: 'Test Name',
-            color: COLORS[2]
-        },
-        null,
-        null,
-        null], //Array(6).fill(null),
+    players: Array(6).fill(null),
     cards: cards.reduce((curr, next) => {
         return Object.assign({}, curr, {
             [next.id]: next

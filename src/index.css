@@ -11,26 +11,69 @@ h2 {
     font-weight: 700;
 }
 
+button {
+    border: none;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: #cbcbcb;
+}
+
+.buttons {
+    text-align: center;
+    min-height: 40px;
+}
+
+#main {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: row;
+}
+
+.player-section {
+    min-width: 120px;
+}
+
+.player-section > div {
+    width: 90%;
+}
+
+#sidebar {
+    width: 400px;
+}
+
 #app {
     display: flex;
     flex-direction: row;
 }
 
 #discards-container {
-    width: 250px;
-    padding-left: 50px;
+
 }
 
 #discards {
     display: flex;
     flex-wrap: wrap;
-    min-height: 200px;
+    min-height: 500px;
     background-color: #e5e5e5;
 }
 
 #hands {
     display: flex;
     flex-direction: row;
+}
+
+.hand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 300px;
 }
 
 #stacks {
@@ -43,15 +86,25 @@ h2 {
     flex-direction: row;
 }
 
+.player-section {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .stack {
     margin: 5px;
     width: 60px;
-    height: 150px;
+    height: 320px;
     background-color: gray;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
 }
 
 .card {
-    margin: 10px;
+    margin: 5px;
     height: 60px;
     width: 60px;
     border-radius: 50px;
@@ -69,9 +122,11 @@ h2 {
 
 .player {
     margin: 5px;
-    height: 80px;
-    width: 60px;
+    height: 36px;
+    width: 120px;
     border: 1px solid gray;
+    text-align: center;
+    line-height: 36px;
 }
 
 .card img {
@@ -84,6 +139,27 @@ h2 {
     max-width: 70%;
     max-height: 70%;
     pointer-events: none;
+}
+
+.card img.is_me {
+    opacity: 0.2;
+}
+
+#members {
+    list-style-type: none;
+}
+
+#members li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#members li img {
+    display: inline-block;
+    height: 15px;
+    width: auto;
+    margin: 5px;
 }
 
 .green {

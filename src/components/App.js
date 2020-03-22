@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card } from './Card'
 
+const COLORS = ['red', 'orange', 'blue', 'green', 'purple', 'yellow']
+
 const Discards = ({ discards, moveCard, flipCard }) => {
     const onDrop = (e) => {
         e.preventDefault()
@@ -26,7 +28,7 @@ const Discards = ({ discards, moveCard, flipCard }) => {
     )
 }
 
-const Hand = ({ player_number, cards, moveCard, flipCard }) => {
+const Hand = ({ player_number, cards, moveCard, flipCard, is_me }) => {
     return (
         <div className='hand'>
             {cards.map((card, idx) => (
@@ -34,6 +36,8 @@ const Hand = ({ player_number, cards, moveCard, flipCard }) => {
                     position={`player-${player_number}-hand-${idx}`}
                     moveCard={moveCard}
                     flipCard={flipCard}
+                    is_me={is_me}
+                    in_hand={true}
                 />
             ))}
         </div>
@@ -64,7 +68,7 @@ const Stack = ({ player_number, cards, moveCard, flipCard }) => {
     )
 }
 
-const Player = (props) => {
+const Seat = (props) => {
     if (props.player === null) {
         return <NullPlayer {...props} />
     } else {
@@ -79,12 +83,15 @@ const NullPlayer = ({ player_number, player, me, addPlayer }) => {
         addPlayer(player_number, me.name)
     }
     return (
-        <div id={`player-{$player_number}`} className={`player`}>
-            {me.name !== null && me.player_number === null &&
-                <button onClick={sitDown}>
-                    Sit Down
-                </button>
-            }
+        <div id={`player-${player_number}`} className='player-section'>
+            <div className={`player ${COLORS[player_number]}`} />
+            <div className='buttons'>
+                {me.name !== null && me.player_number === null &&
+                    <button onClick={sitDown}>
+                        Sit Down
+                    </button>
+                }
+            </div>
         </div>
     )
 }
@@ -95,15 +102,17 @@ const NonNullPlayer = ({ player_number, player, me, removePlayer }) => {
         removePlayer(player_number)
     }
     return (
-        <div id={`player-{$player_number}`} className={`player ${player.color}`}>
-            <div className='info'>
+        <div id={`player-${player_number}`} className='player-section'>
+            <div className={`player ${COLORS[player_number]}`}>
                 {player.name}
             </div>
-            {me.player_number !== null && player_number === me.player_number &&
-                <button onClick={standUp}>
-                    Stand Up
-                </button>
-            }
+            <div className='buttons'>
+                {me.player_number !== null && player_number === me.player_number &&
+                    <button onClick={standUp}>
+                        Stand Up
+                    </button>
+                }
+            </div>
         </div>
     )
 }
@@ -131,6 +140,12 @@ class GetName extends React.Component {
 
     enterGame() {
         const { name } = this.state
+        if (name.length > 10) {
+            this.setState({
+                error: 'Name cannot be more than ten characters'
+            })
+            return
+        }
         if (name.length < 2) {
             this.setState({
                 error: 'Name must be at least two characters'
@@ -168,6 +183,34 @@ class GetName extends React.Component {
     }
 }
 
+const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, player_number, flipCard, moveCard }) => {
+    const { player, hand, stack } = player_section
+    return (
+        <div className='player-section'>
+            <Stack
+                player_number={player_number}
+                cards={stack}
+                moveCard={moveCard}
+                flipCard={flipCard}
+            />
+            <Seat
+                player={player}
+                me={me}
+                addPlayer={addPlayer}
+                removePlayer={removePlayer}
+                player_number={player_number}
+            />
+            <Hand
+                player_number={player_number}
+                cards={hand}
+                moveCard={moveCard}
+                flipCard={flipCard}
+                is_me={is_me}
+            />
+        </div>
+    )
+}
+
 let App = ({me, room, game, moveCard, flipCard, addPlayer, removePlayer, setName}) => {
     if (me.name === null) {
         return (
@@ -190,44 +233,33 @@ let App = ({me, room, game, moveCard, flipCard, addPlayer, removePlayer, setName
         })
         return stack
     })
+    const player_sections = game.players.map((player, idx) => {
+        return {
+            player,
+            hand: hands[idx],
+            stack: stacks[idx]
+        }
+    })
     return (
         <div id='app'>
-            <div className='main'>
-                <div id='players-container'>
-                    <h2>Players</h2>
-                    <div id='players'>
-                        {players.map((player, idx) => (
-                            <Player player={player} me={me} addPlayer={addPlayer} removePlayer={removePlayer} player_number={idx} key={idx} />
-                        ))}
-                    </div>
-                </div>
-                <div id='hands-container'>
-                    <h2>Hands</h2>
-                    <div id='hands'>
-                        {hands.map((hand, idx) => (
-                            <Hand cards={hand} moveCard={moveCard} flipCard={flipCard} player_number={idx} key={idx} />
-                        ))}
-                    </div>
-                </div>
-                <div id='stacks-container'>
-                    <h2>Stacks</h2>
-                    <div id='stacks'>
-                        {stacks.map((stack, idx) => (
-                            <Stack cards={stack} moveCard={moveCard} flipCard={flipCard} player_number={idx} key={idx} />
-                        ))}
-                    </div>
-                </div>
+            <div id='main'>
+                {player_sections.map((player_section, player_number) => {
+                    const is_me = me.player_number === player_number
+                    return <PlayerSection player_section={player_section} is_me={is_me} me={me} addPlayer={addPlayer} removePlayer={removePlayer} player_number={player_number} key={player_number} moveCard={moveCard} flipCard={flipCard} />
+                })}
             </div>
-            <Discards discards={discards} moveCard={moveCard} flipCard={flipCard} />
-            <div id='room-container'>
-                <h2>Room</h2>
-                <ul>
-                    {room.members.map((member) => (
-                        <li>
-                            <span>{member}</span>
-                        </li>
-                    ))}
-                </ul>
+            <div id='sidebar'>
+                <Discards discards={discards} moveCard={moveCard} flipCard={flipCard} />
+                <div id='room-container'>
+                    <h2>Room</h2>
+                    <ul id='members'>
+                        {room.members.map((member) => (
+                            <li>
+                                <img src={'/static/img/fa-user.png'} /><span>{member}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </div>
     )

@@ -15,35 +15,40 @@ const NullCard = ({ position, moveCard }) => {
     )
 }
 
-const NonNullCard = ({ id, color, type, is_flipped, flipCard }) => {
+const NonNullCard = ({ id, color, type, is_flipped, flipCard, is_me, in_hand }) => {
     const onDragStart = (e) => {
         e.dataTransfer.setData('draggable_id', e.target.id)
     }
     const onDoubleClick = () => {
         flipCard(id)
     }
+    const src = `/static/img/${type}.png`
     return (
         <div className={`card ${color}`} id={id}
             draggable={true}
             onDragStart={onDragStart}
             onDoubleClick={onDoubleClick}
         >
-            {is_flipped && type === 'skull' && (
-                <img src={'/static/img/skull.png'} />
+            {in_hand && is_me && !is_flipped && (
+                <img className={'is_me'} src={src} />
             )}
-            {is_flipped && type === 'rose' && (
-                <img src={'/static/img/rose.png'} />
+            {is_flipped && (
+                <img src={src} />
             )}
         </div>
     )
 }
 
-const Card = ({ position, card, moveCard, flipCard }) => {
+const Card = ({ position, card, moveCard, flipCard, is_me, in_hand }) => {
     if (card === null) {
         return <NullCard position={position} moveCard={moveCard} />
     } else {
-        return <NonNullCard {...card} flipCard={flipCard} />
+        return <NonNullCard {...card} flipCard={flipCard} is_me={is_me} in_hand={in_hand} />
     }
+}
+
+Card.defaultProps = {
+    in_hand: false
 }
 
 const Cards = ({ cards }) => (
