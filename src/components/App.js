@@ -80,7 +80,7 @@ const NullPlayer = ({ player_number, player, me, addPlayer }) => {
     }
     return (
         <div id={`player-{$player_number}`} className={`player`}>
-            {me.name && me.player_number === null &&
+            {me.name !== null && me.player_number === null &&
                 <button onClick={sitDown}>
                     Sit Down
                 </button>
@@ -99,7 +99,7 @@ const NonNullPlayer = ({ player_number, player, me, removePlayer }) => {
             <div className='info'>
                 {player.name}
             </div>
-            {me.player_number && player_number === me.player_number &&
+            {me.player_number !== null && player_number === me.player_number &&
                 <button onClick={standUp}>
                     Stand Up
                 </button>
@@ -108,7 +108,56 @@ const NonNullPlayer = ({ player_number, player, me, removePlayer }) => {
     )
 }
 
-let App = ({me, game, moveCard, flipCard, addPlayer, removePlayer}) => {
+class GetName extends React.Component {
+    constructor(props) {
+        super(props)
+        this.onChangeName = this.onChangeName.bind(this)
+        this.enterGame = this.enterGame.bind(this)
+        this.state = {
+            name: ''
+        }
+    }
+
+    componentDidMount() {
+        console.log('GetName.componentDidMount()')
+    }
+
+    onChangeName(e) {
+        this.setState({
+            name: e.target.value
+        })
+    }
+
+    enterGame() {
+        const { name } = this.state
+        this.props.setName(name)
+    }
+
+    render() {
+        const { setName } = this.props
+        const { name } = this.state
+        return (
+            <div>
+                <h1>Skull</h1>
+                <h3>It is always a skull</h3>
+                <div id='set-name'>
+                    <p>Enter your name</p>
+                    <input type='text' value={name} onChange={this.onChangeName} />
+                    <button onClick={this.enterGame}>
+                        Enter
+                    </button>
+                </div>
+            </div>
+        )
+    }
+}
+
+let App = ({me, game, moveCard, flipCard, addPlayer, removePlayer, setName}) => {
+    if (me.name === null) {
+        return (
+            <GetName setName={setName} />
+        )
+    }
     let {discards, players, cards, hands, mats, stacks} = game
     discards = discards.map(card_id => {
         return card_id === null ? null : cards[card_id]
