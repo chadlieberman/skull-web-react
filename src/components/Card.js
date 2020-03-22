@@ -28,7 +28,12 @@ const NonNullCard = ({ id, color, type, is_flipped, flipCard }) => {
             onDragStart={onDragStart}
             onDoubleClick={onDoubleClick}
         >
-            {is_flipped ? 'F' : 'N'}
+            {is_flipped && type === 'skull' && (
+                <img src={process.env.PUBLIC_URL + '/img/skull.png'} />
+            )}
+            {is_flipped && type === 'rose' && (
+                <img src={process.env.PUBLIC_URL + '/img/rose.png'} />
+            )}
         </div>
     )
 }

@@ -52,10 +52,19 @@ h2 {
 
 .card {
     margin: 10px;
-    height: 50px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
     border-radius: 50px;
     background: #e5e5e5;
+    border: 1px solid gray;
+    position: relative;
+    box-shadow: 1px 2px #ababab;
+}
+
+.card.null {
+    border: none;
+    box-shadow: none;
+    cursor: default;
 }
 
 .player {
@@ -63,29 +72,40 @@ h2 {
     height: 80px;
     width: 60px;
     border: 1px solid gray;
-    color: white;
+}
+
+.card img {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    max-width: 70%;
+    max-height: 70%;
+    pointer-events: none;
 }
 
 .green {
-    background-color: green;
+    background-color: #caffbe;
 }
 
 .red {
-    background-color: red;
+    background-color: #ffa3b2;
 }
 
 .blue {
-    background-color: blue;
+    background-color: #d1e1ff;
 }
 
 .orange {
-    background-color: orange;
+    background-color: #ffd3b7;
 }
 
 .yellow {
-    background-color: yellow;
+    background-color: #fcffc6;
 }
 
 .purple {
-    background-color: purple;
+    background-color: #ebc6ff;
 }

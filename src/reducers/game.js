@@ -92,6 +92,7 @@ const game = (state = initial_state, action) => {
             })
 
         case 'FLIP_CARD':
+            if (card_id === null || card_id === '') return state
             let new_cards = state.cards
             new_cards[card_id].is_flipped = !new_cards[card_id].is_flipped
             return Object.assign({}, state, {
@@ -99,6 +100,8 @@ const game = (state = initial_state, action) => {
             })
 
         case 'MOVE_CARD':
+            if (card_id === null || card_id === '') return state
+            if (to_position === null || card_id === null || to_position === '' || card_id === '') return state
             console.log('MOVE_CARD', card_id, 'to', to_position)
             // Remove the card from where it is now
             discards = state.discards.filter(filterOutCard(card_id))
