@@ -1,3 +1,8 @@
+// Me
+export const setName = (name) => ({
+    type: 'SET_NAME',
+    name
+})
 
 // Player
 export const addPlayer = (player_number, name) => ({
