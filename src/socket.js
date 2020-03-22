@@ -11,6 +11,6 @@ socket.on('action', action => {
     store.dispatch(action)
 })
 
-socket.emit('action', {this: 1})
+//socket.emit('action', {this: 1})
 
 export default socket

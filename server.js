@@ -21,39 +21,44 @@ app.get('/', (request, response) => {
 })
 
 
-const handleDisconnect = (socket_id) => () => {
-    console.log('disconnection', socket_id)
-    delete connections[socket_id]
+const handleDisconnect = (socket) => () => {
+    console.log('disconnection', socket.id)
+    delete connections[socket.id]
 }
 
-const handleAction = (socket_id) => (action) => {
-    console.log(`[${socket_id}]:`, action)
+const handleAction = (socket) => (action) => {
+    console.log(`[${socket.id}]:`, action)
     switch (action.type) {
         case 'SET_NAME':
-            connections[socket_id].name = action.name
+            connections[socket.id].name = action.name
+            return
+        default:
+            console.log('sending action', action, 'to others')
+            socket.broadcast.emit('action', action)
     }
+    // Dispatch action to update server game state
     //store.dispatch(action)
 }
 
 const handleConnect = (socket) => {
     console.log('new connection', socket.id)
     connections[socket.id] = { socket, name: null }
-    socket.on('disconnect', handleDisconnect(socket.id))
-    socket.on('action', handleAction(socket.id))
+    socket.on('disconnect', handleDisconnect(socket))
+    socket.on('action', handleAction(socket))
 }
 
 io.on('connection', handleConnect)
 
 server.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`)
-    let counter = 0
+//    let counter = 0
     setInterval(() => {
-        console.log(`emitting message ${counter}`)
+//        console.log(`emitting message ${counter}`)
         console.log('connections =', Object.entries(connections).map(([k,v]) => {
             return [k, v.name]
         }))
-        io.sockets.emit('message', 'hi!')
-        counter += 1
-    }, 1000)
+//        io.sockets.emit('message', 'hi!')
+//        counter += 1
+    }, 2000)
 })
 
