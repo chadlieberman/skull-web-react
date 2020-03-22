@@ -114,7 +114,8 @@ class GetName extends React.Component {
         this.onChangeName = this.onChangeName.bind(this)
         this.enterGame = this.enterGame.bind(this)
         this.state = {
-            name: ''
+            name: '',
+            error: null
         }
     }
 
@@ -130,22 +131,37 @@ class GetName extends React.Component {
 
     enterGame() {
         const { name } = this.state
+        if (name.length < 2) {
+            this.setState({
+                error: 'Name must be at least two characters'
+            })
+            return
+        }
+        if (!(/[a-z]+$/.test(name))) {
+            this.setState({
+                error: 'Name must be only [a-z] characters'
+            })
+            return
+        }
         this.props.setName(name)
     }
 
     render() {
         const { setName } = this.props
-        const { name } = this.state
+        const { name, error } = this.state
         return (
             <div>
                 <h1>Skull</h1>
                 <h3>It is always a skull</h3>
                 <div id='set-name'>
-                    <p>Enter your name</p>
+                    <p>Enter your name (only use [a-z])</p>
                     <input type='text' value={name} onChange={this.onChangeName} />
                     <button onClick={this.enterGame}>
                         Enter
                     </button>
+                    {error && (
+                        <div className='error'>{error}</div>
+                    )}
                 </div>
             </div>
         )
