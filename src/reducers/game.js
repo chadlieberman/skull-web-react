@@ -98,7 +98,7 @@ const game = (state = initial_state, action) => {
         case 'MOVE_CARD':
             console.log('MOVE_CARD', card_id, 'to', to_position)
             // Remove the card from where it is now
-            discards = state.discards.map(removeCard(card_id))
+            discards = state.discards.filter(filterOutCard(card_id))
             hands = state.hands.map(hand => {
                 return hand.map(removeCard(card_id))
             })
