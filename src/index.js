@@ -4,7 +4,7 @@ import thunkMiddleware from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './reducers'
 import { Root } from './components/Root'
-import { logger, sendAction } from './middleware'
+import { logger } from './middleware'
 import './index.css'
 
 const store = createStore(

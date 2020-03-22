@@ -100,10 +100,12 @@ input {
 }
 
 #discards {
-    display: flex;
-    flex-wrap: wrap;
-    min-height: 500px;
+    min-height: 400px;
     background-color: #e5e5e5;
+}
+
+#discards > .card {
+    display: inline-block;
 }
 
 #hands {
@@ -138,7 +140,7 @@ input {
 .stack {
     margin: 5px;
     width: 60px;
-    height: 280px;
+    height: 300px;
     background-color: #dadada;
     display: flex;
     flex-direction: column-reverse;

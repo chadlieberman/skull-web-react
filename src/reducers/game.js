@@ -58,7 +58,7 @@ const STACK_RE = /player-(?<player_number>\d)-stack/
 const HAND_RE = /player-(?<player_number>\d)-hand-(?<hand_position>\d)/
 
 const game = (state = initial_state, action) => {
-    let discards, hands, stacks, first_open_pos, found, players, mats
+    let discards, hands, stacks, found, players, mats
     const { player_number, name, card_id, to_position, mat_id } = action
     switch (action.type) {
 
@@ -93,8 +93,9 @@ const game = (state = initial_state, action) => {
         case 'MOVE_CARD':
             if (card_id === null || card_id === '') return state
             if (to_position === null || card_id === null || to_position === '' || card_id === '') return state
-            console.log('MOVE_CARD', card_id, 'to', to_position)
+            //console.log('MOVE_CARD', card_id, 'to', to_position)
             // Remove the card from where it is now
+            let cards = state.cards
             discards = state.discards.filter(filterOutCard(card_id))
             hands = state.hands.map(hand => {
                 return hand.map(removeCard(card_id))
@@ -104,12 +105,12 @@ const game = (state = initial_state, action) => {
             })
             // Put the card in it's to_position
             if (to_position.includes('discard')) {
-                first_open_pos = discards.findIndex(el => el === null)
                 discards.push(card_id)
+                cards[card_id].is_flipped = false
             } else if (to_position.includes('stack')) {
                 found = to_position.match(STACK_RE)
                 let { player_number } = found.groups
-                console.log('player_number', player_number)
+                //console.log('player_number', player_number)
                 stacks[player_number].push(card_id)
             } else if (to_position.includes('hand')) {
                 found = to_position.match(HAND_RE)
@@ -118,11 +119,12 @@ const game = (state = initial_state, action) => {
             } else {
                 console.error(`Could not move card ${card_id} to ${to_position}`)
             }
-            console.log('stacks =', stacks)
+            //console.log('stacks =', stacks)
             return Object.assign({}, state, {
                 discards,
                 hands,
-                stacks
+                stacks,
+                cards
             })
 
         case 'FLIP_MAT':

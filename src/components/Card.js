@@ -30,10 +30,10 @@ const NonNullCard = ({ id, color, type, is_flipped, flipCard, is_me, in_hand }) 
             onDoubleClick={onDoubleClick}
         >
             {in_hand && is_me && !is_flipped && (
-                <img className={'is_me'} src={src} />
+                <img className={'is_me'} alt={'card front'} src={src} />
             )}
             {is_flipped && (
-                <img src={src} />
+                <img src={src} alt={'card back'} />
             )}
         </div>
     )

@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from './Card'
 
 const COLORS = ['red', 'orange', 'blue', 'green', 'purple', 'yellow']
+const noOp = () => {}
 
 const Discards = ({ discards, moveCard, flipCard }) => {
     const onDrop = (e) => {
@@ -20,7 +21,7 @@ const Discards = ({ discards, moveCard, flipCard }) => {
                     <Card card={card} key={idx}
                         position={`discard-${idx}`}
                         moveCard={moveCard}
-                        flipCard={flipCard}
+                        flipCard={noOp}
                     />
                 ))}
             </div>
@@ -35,7 +36,7 @@ const Hand = ({ player_number, cards, moveCard, flipCard, is_me }) => {
                 <Card card={card} key={idx}
                     position={`player-${player_number}-hand-${idx}`}
                     moveCard={moveCard}
-                    flipCard={flipCard}
+                    flipCard={is_me ? flipCard : noOp}
                     is_me={is_me}
                     in_hand={true}
                 />
@@ -49,7 +50,7 @@ const Stack = ({ player_number, cards, moveCard, flipCard }) => {
         e.preventDefault()
         const card_id = e.dataTransfer.getData('draggable_id')
         const position = `player-${player_number}-stack`
-        console.log('move card', card_id, 'to', position)
+        //console.log('move card', card_id, 'to', position)
         moveCard(card_id, position)
     }
     return (
@@ -79,7 +80,7 @@ const Seat = (props) => {
 const NullPlayer = ({ player_number, player, me, addPlayer }) => {
     const sitDown = () => {
         if (me.name === null) return
-        console.log('Sitting down at position', player_number)
+        //console.log('Sitting down at position', player_number)
         addPlayer(player_number, me.name)
     }
     return (
@@ -98,7 +99,7 @@ const NullPlayer = ({ player_number, player, me, addPlayer }) => {
 
 const NonNullPlayer = ({ player_number, player, me, removePlayer }) => {
     const standUp = () => {
-        console.log('Stand up from position', player_number)
+        //console.log('Stand up from position', player_number)
         removePlayer(player_number)
     }
     return (
@@ -162,12 +163,11 @@ class GetName extends React.Component {
     }
 
     render() {
-        const { setName } = this.props
         const { name, error } = this.state
         return (
             <div id='intro'>
                 <h1>Skull</h1>
-                <img src={'/static/img/skull.png'} />
+                <img alt={'skull'} src={'/static/img/skull.png'} />
                 <h3>It is always a skull</h3>
                 <div id='set-name'>
                     <p>Enter your name (only use [a-z])</p>
@@ -222,10 +222,10 @@ const Mat = ({id, color, is_flipped, flipMat}) => {
     return (
         <div className={`mat ${color}`} onDoubleClick={onDoubleClick}>
             {is_flipped && (
-                <img src={'/static/img/mat-flipped.png'} />
+                <img alt={'flipped mat'} src={'/static/img/mat-flipped.png'} />
             )}
             {!is_flipped && (
-                <img src={'/static/img/mat-unflipped.png'} />
+                <img alt={'unflipped mat'} src={'/static/img/mat-unflipped.png'} />
             )}
         </div>
     )
@@ -237,7 +237,7 @@ let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer
             <GetName setName={setName} />
         )
     }
-    let {discards, players, cards, hands, mats, stacks} = game
+    let {discards, cards, hands, mats, stacks} = game
     discards = discards.map(card_id => {
         return card_id === null ? null : cards[card_id]
     })
@@ -261,7 +261,7 @@ let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer
             mat: mats[`mat_${idx}`]
         }
     })
-    console.log('player_sections =', player_sections)
+    //console.log('player_sections =', player_sections)
     return (
         <div id='app'>
             <div id='main'>
@@ -277,7 +277,7 @@ let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer
                     <ul id='members'>
                         {room.members.map((member, idx) => (
                             <li key={idx}>
-                                <img src={'/static/img/fa-user.png'} /><span>{member}</span>
+                                <img alt={'user icon'} src={'/static/img/fa-user.png'} /><span>{member}</span>
                             </li>
                         ))}
                     </ul>

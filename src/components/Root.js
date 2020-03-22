@@ -7,21 +7,17 @@ import { moveCard, flipCard, flipMat, addPlayer, removePlayer, setName } from '.
 
 const Header = () => (
     <div id='header'>
-        <p>Skull is a fun game of betting and bluffing. I did not invent it. I just put it online. You can read the rules <a target='_blank' href='https://www.ultraboardgames.com/skull-and-roses/game-rules.php'>here</a>. You can buy the real game <a target='_blank' href='https://www.amazon.com/Asmodee-SKR01-Skull/dp/B00GYDLY8E'>here</a>.</p>
+        <p>Skull is a fun game of betting and bluffing. I did not invent it. I just put it online. You can read the rules <a target='_blank' rel="noopener noreferrer" href='https://www.ultraboardgames.com/skull-and-roses/game-rules.php'>here</a>. You can buy the real game <a target='_blank' rel="noopener noreferrer" href='https://www.amazon.com/Asmodee-SKR01-Skull/dp/B00GYDLY8E'>here</a>.</p>
     </div>
 )
 
 class Container extends React.Component {
-    constructor(props) {
-        super(props)
-    }
 
     componentDidMount() {
         console.log('Container.componentDidMount')
     }
 
     render() {
-        console.log('Container props=', this.props)
         return (
             <div>
                 <Header />
