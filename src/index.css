@@ -57,6 +57,48 @@ button:hover {
 
 }
 
+#intro {
+    width: 100%;
+    text-align: center;
+}
+
+#intro img {
+    width: 300px;
+    height: auto;
+}
+
+#set-name {
+    margin-top: 20px;
+}
+
+input {
+    height: 26px;
+    font-size: 14px;
+    padding: 3px 6px;
+    width: 100px;
+}
+
+#set-name p {
+    padding: 5px;
+}
+
+#intro h1 {
+    padding: 10px;
+}
+
+#header {
+    text-align: center;
+    background-color: #ffe7d1;
+}
+
+#header p {
+    padding: 5px;
+}
+
+#set-name button {
+    margin-left: 10px;
+}
+
 #discards {
     display: flex;
     flex-wrap: wrap;

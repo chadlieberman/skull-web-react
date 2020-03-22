@@ -165,8 +165,9 @@ class GetName extends React.Component {
         const { setName } = this.props
         const { name, error } = this.state
         return (
-            <div>
+            <div id='intro'>
                 <h1>Skull</h1>
+                <img src={'/static/img/skull.png'} />
                 <h3>It is always a skull</h3>
                 <div id='set-name'>
                     <p>Enter your name (only use [a-z])</p>
