@@ -23,7 +23,7 @@ let mats = [...Array(6).keys()].map(num => ({
 // position = 'discard'
 
 const initial_state = {
-    discards: Array(24).fill(null),
+    discards: [],
     players: [
         null,
         null,
@@ -108,7 +108,7 @@ const game = (state = initial_state, action) => {
             // Put the card in it's to_position
             if (to_position.includes('discard')) {
                 first_open_pos = discards.findIndex(el => el === null)
-                discards[first_open_pos] = card_id
+                discards.push(card_id)
             } else if (to_position.includes('stack')) {
                 found = to_position.match(STACK_RE)
                 let { player_number } = found.groups

@@ -24,6 +24,8 @@ h2 {
 #discards {
     display: flex;
     flex-wrap: wrap;
+    min-height: 200px;
+    background-color: #e5e5e5;
 }
 
 #hands {
