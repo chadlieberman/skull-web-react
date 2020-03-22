@@ -11,6 +11,10 @@ socket.on('action', action => {
     store.dispatch(action)
 })
 
+window.onbeforeunload = () => {
+    socket.disconnect()
+}
+
 //socket.emit('action', {this: 1})
 
 export default socket

@@ -4,6 +4,7 @@ import path from 'path'
 import socketIO from 'socket.io'
 import { combineReducers, createStore } from 'redux'
 import game from './src/reducers/game'
+import room from './src/reducers/room'
 
 let app = express()
 const server = http.Server(app)
@@ -23,11 +24,17 @@ app.get('/', (request, response) => {
 })
 
 const store = createStore(
-    combineReducers({ game })
+    combineReducers({ game, room })
 )
 
 const handleDisconnect = (socket) => () => {
     console.log('disconnection', socket.id)
+    const member_action = {
+        type: 'REMOVE_MEMBER',
+        name: connections[socket.id].name
+    }
+    store.dispatch(member_action)
+    socket.broadcast.emit('action', member_action)
     delete connections[socket.id]
 }
 
@@ -36,6 +43,12 @@ const handleAction = (socket) => (action) => {
     switch (action.type) {
         case 'SET_NAME':
             connections[socket.id].name = action.name
+            const member_action = {
+                type: 'ADD_MEMBER',
+                name: action.name
+            }
+            store.dispatch(member_action)
+            socket.broadcast.emit('action', member_action)
             return
         default:
             store.dispatch(action)
@@ -51,8 +64,9 @@ const handleConnect = (socket) => {
     socket.on('action', handleAction(socket))
     const state = store.getState()
     socket.emit('action', {
-        type: 'REPLACE_GAME_STATE',
-        game: state.game
+        type: 'REPLACE',
+        game: state.game,
+        room: state.room,
     })
 }
 

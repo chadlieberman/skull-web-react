@@ -168,7 +168,7 @@ class GetName extends React.Component {
     }
 }
 
-let App = ({me, game, moveCard, flipCard, addPlayer, removePlayer, setName}) => {
+let App = ({me, room, game, moveCard, flipCard, addPlayer, removePlayer, setName}) => {
     if (me.name === null) {
         return (
             <GetName setName={setName} />
@@ -219,6 +219,16 @@ let App = ({me, game, moveCard, flipCard, addPlayer, removePlayer, setName}) => 
                 </div>
             </div>
             <Discards discards={discards} moveCard={moveCard} flipCard={flipCard} />
+            <div id='room-container'>
+                <h2>Room</h2>
+                <ul>
+                    {room.members.map((member) => (
+                        <li>
+                            <span>{member}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     )
 }

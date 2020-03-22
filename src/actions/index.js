@@ -9,6 +9,10 @@ export const setName = (name) => {
         }
         socket.emit('action', action)
         dispatch(action)
+        dispatch({
+            type: 'ADD_MEMBER',
+            name
+        })
     }
 }
 
