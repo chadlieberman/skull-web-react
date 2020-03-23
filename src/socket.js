@@ -1,6 +1,9 @@
 import io from 'socket.io-client'
 import store from './index'
-// Setup sockets
+
+import { removePlayer } from './actions'
+
+// Setup socket
 const socket = io(window.location.href)
 socket.on('message', data => {
     console.log('got message')
@@ -12,9 +15,13 @@ socket.on('action', action => {
 })
 
 window.onbeforeunload = () => {
+    const state = store.getState()
+    const { me } = state
+    const { player_number } = me
+    if (player_number !== null) {
+        store.dispatch(removePlayer(player_number))
+    }
     socket.disconnect()
 }
-
-//socket.emit('action', {this: 1})
 
 export default socket
