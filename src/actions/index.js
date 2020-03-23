@@ -1,5 +1,13 @@
 import socket from '../socket'
 
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
 // Me
 export const setName = (name) => {
     return (dispatch) => {
@@ -59,6 +67,18 @@ export const moveCard = (card_id, to_position) => {
             type: 'MOVE_CARD',
             card_id,
             to_position
+        }
+        socket.emit('action', action)
+        dispatch(action)
+    }
+}
+
+export const shuffleHand = (player_number) => {
+    return (dispatch) => {
+        const action = {
+            type: 'SHUFFLE_HAND',
+            player_number,
+            perm: shuffle([0, 1, 2, 3]) 
         }
         socket.emit('action', action)
         dispatch(action)
