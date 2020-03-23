@@ -96,6 +96,7 @@ const game = (state = initial_state, action) => {
             //console.log('MOVE_CARD', card_id, 'to', to_position)
             // Remove the card from where it is now
             let cards = state.cards
+            const card_color = cards[card_id].color
             discards = state.discards.filter(filterOutCard(card_id))
             hands = state.hands.map(hand => {
                 return hand.map(removeCard(card_id))
@@ -110,11 +111,13 @@ const game = (state = initial_state, action) => {
             } else if (to_position.includes('stack')) {
                 found = to_position.match(STACK_RE)
                 let { player_number } = found.groups
+                if (COLORS[player_number] !== card_color) return state
                 //console.log('player_number', player_number)
                 stacks[player_number].push(card_id)
             } else if (to_position.includes('hand')) {
                 found = to_position.match(HAND_RE)
                 let { player_number, hand_position } = found.groups
+                if (COLORS[player_number] !== card_color) return state
                 hands[player_number][hand_position] = card_id
                 cards[card_id].is_flipped = false
             } else {
