@@ -29,7 +29,7 @@ const Discards = ({ discards, moveCard, flipCard }) => {
     )
 }
 
-const Hand = ({ player_number, cards, moveCard, flipCard, is_me }) => {
+const Hand = ({ player_number, cards, moveCard, flipCard, shuffleHand, is_me }) => {
     return (
         <div className='hand'>
             {cards.map((card, idx) => (
@@ -41,6 +41,11 @@ const Hand = ({ player_number, cards, moveCard, flipCard, is_me }) => {
                     in_hand={true}
                 />
             ))}
+            {is_me && (
+                <button className='shuffle' onClick={() => shuffleHand(player_number)}>
+                    Shuffle
+                </button>
+            )}
         </div>
     )
 }
@@ -184,7 +189,7 @@ class GetName extends React.Component {
     }
 }
 
-const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, player_number, flipCard, moveCard, flipMat }) => {
+const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, player_number, flipCard, moveCard, flipMat, shuffleHand }) => {
     const { player, hand, stack, mat } = player_section
     return (
         <div className='player-section'>
@@ -209,6 +214,7 @@ const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, pla
                 cards={hand}
                 moveCard={moveCard}
                 flipCard={flipCard}
+                shuffleHand={shuffleHand}
                 is_me={is_me}
             />
         </div>
@@ -231,7 +237,7 @@ const Mat = ({id, color, is_flipped, flipMat}) => {
     )
 }
 
-let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer, setName}) => {
+let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer, setName, shuffleHand}) => {
     if (me.name === null) {
         return (
             <GetName setName={setName} />
@@ -267,7 +273,7 @@ let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer
             <div id='main'>
                 {player_sections.map((player_section, player_number) => {
                     const is_me = me.player_number === player_number
-                    return <PlayerSection player_section={player_section} is_me={is_me} me={me} addPlayer={addPlayer} removePlayer={removePlayer} player_number={player_number} key={player_number} moveCard={moveCard} flipCard={flipCard} flipMat={flipMat} />
+                    return <PlayerSection player_section={player_section} is_me={is_me} me={me} addPlayer={addPlayer} removePlayer={removePlayer} player_number={player_number} key={player_number} moveCard={moveCard} flipCard={flipCard} flipMat={flipMat} shuffleHand={shuffleHand} />
                 })}
             </div>
             <div id='sidebar'>

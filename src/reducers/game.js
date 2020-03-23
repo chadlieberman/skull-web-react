@@ -59,7 +59,7 @@ const HAND_RE = /player-(?<player_number>\d)-hand-(?<hand_position>\d)/
 
 const game = (state = initial_state, action) => {
     let discards, hands, stacks, found, players, mats
-    const { player_number, name, card_id, to_position, mat_id } = action
+    const { player_number, name, card_id, to_position, mat_id, perm } = action
     switch (action.type) {
 
         case 'REPLACE':
@@ -127,6 +127,14 @@ const game = (state = initial_state, action) => {
                 stacks,
                 cards
             })
+
+        case 'SHUFFLE_HAND':
+            let new_hand = perm.map(idx => {
+                return state.hands[player_number][idx]
+            })
+            hands = state.hands
+            hands[player_number] = new_hand
+            return Object.assign({}, state, { hands })
 
         case 'FLIP_MAT':
             mats = state.mats
