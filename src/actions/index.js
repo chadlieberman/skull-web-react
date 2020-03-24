@@ -100,4 +100,14 @@ export const flipMat = (mat_id) => {
     }
 }
 
+export const collectCards = (player_number) => {
+    return (dispatch) => {
+        const action = {
+            type: 'COLLECT_CARDS',
+            player_number
+        }
+        socket.emit('action', action)
+        dispatch(action)
+    }
+}
 

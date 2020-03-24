@@ -58,8 +58,26 @@ const filterOutCard = (removed_card_id) => (card_id) => {
 const STACK_RE = /player-(?<player_number>\d)-stack/
 const HAND_RE = /player-(?<player_number>\d)-hand-(?<hand_position>\d)/
 
+const removeFromAreas = (state, card_ids) => {
+    let { discards, hands, stacks } = state
+    card_ids.forEach(card_id => {
+        discards = discards.filter(filterOutCard(card_id))
+        hands = hands.map(hand => {
+            return hand.map(removeCard(card_id))
+        })
+        stacks = stacks.map((stack, idx) => {
+            return stack.filter(filterOutCard(card_id))
+        })
+    })
+    return { discards, hands, stacks }
+}
+
+const sameColorCards = (color) => (c) => {
+    return c.color === color
+}
+
 const game = (state = initial_state, action) => {
-    let discards, hands, stacks, found, players, mats
+    let discards, hands, stacks, found, players, mats, areas, last_stack_idx, cards
     const { player_number, name, card_id, to_position, mat_id, perm } = action
     switch (action.type) {
 
@@ -83,6 +101,33 @@ const game = (state = initial_state, action) => {
                 players
             })
 
+        case 'COLLECT_CARDS':
+            if (player_number === null) return state
+            const color = COLORS[player_number]
+            cards = state.cards
+            Object.values(state.cards).forEach(card => {
+                if (card.color === color) {
+                    cards[card.id].is_flipped = false
+                }
+            })
+            const color_cards_ids = Object.values(cards).filter(sameColorCards(color)).map(c => c.id)
+            last_stack_idx = state.last_stack_idx
+            areas = removeFromAreas(state, color_cards_ids)
+            discards = areas.discards
+            stacks = areas.stacks
+            hands = areas.hands
+            hands[player_number] = color_cards_ids
+            if (last_stack_idx && !stacks[last_stack_idx].length) {
+                last_stack_idx = null
+            }
+            return Object.assign({}, state, {
+                discards,
+                hands,
+                stacks,
+                cards,
+                last_stack_idx,
+            })
+
         case 'FLIP_CARD':
             if (card_id === null || card_id === '') return state
             let new_cards = state.cards
@@ -95,16 +140,13 @@ const game = (state = initial_state, action) => {
             if (card_id === null || card_id === '') return state
             if (to_position === null || card_id === null || to_position === '' || card_id === '') return state
             // Remove the card from where it is now
-            let cards = state.cards
-            let last_stack_idx = state.last_stack_idx
+            cards = state.cards
+            last_stack_idx = state.last_stack_idx
             const card_color = cards[card_id].color
-            discards = state.discards.filter(filterOutCard(card_id))
-            hands = state.hands.map(hand => {
-                return hand.map(removeCard(card_id))
-            })
-            stacks = state.stacks.map((stack, idx) => {
-                return stack.filter(filterOutCard(card_id))
-            })
+            areas = removeFromAreas(state, [card_id])
+            discards = areas.discards
+            stacks = areas.stacks
+            hands = areas.hands
             if (last_stack_idx && !stacks[last_stack_idx].length) {
                 last_stack_idx = null
             }

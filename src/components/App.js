@@ -29,7 +29,55 @@ const Discards = ({ discards, moveCard, flipCard }) => {
     )
 }
 
-const Hand = ({ player_number, cards, moveCard, flipCard, shuffleHand, is_me }) => {
+class Collect extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            confirming: false
+        }
+        this.doCollect = this.doCollect.bind(this)
+        this.askConfirm = this.askConfirm.bind(this)
+    }
+
+    askConfirm() {
+        this.setState({
+            confirming: true
+        }, () => {
+            setTimeout(() => {
+                this.setState({
+                    confirming: false
+                })
+            }, 1000)
+        })
+    }
+
+    doCollect() {
+        this.props.collectCards(this.props.player_number)
+        this.setState({
+            confirming: false
+        })
+    }
+
+    render() {
+        const { confirming } = this.state
+        if (confirming) {
+            return (
+                <button onClick={() => this.doCollect()}>
+                    Confirm
+                </button>
+            )
+        } else {
+            return (
+                <button onClick={() => this.askConfirm()}>
+                    Collect
+                </button>
+            )
+        }
+    }
+}
+
+const Hand = ({ player_number, cards, moveCard, flipCard, shuffleHand, is_me, collectCards }) => {
     return (
         <div className='hand'>
             {cards.map((card, idx) => (
@@ -42,9 +90,12 @@ const Hand = ({ player_number, cards, moveCard, flipCard, shuffleHand, is_me }) 
                 />
             ))}
             {is_me && (
-                <button className='shuffle' onClick={() => shuffleHand(player_number)}>
-                    Shuffle
-                </button>
+                <div className='hand-actions'>
+                    <button className='shuffle' onClick={() => shuffleHand(player_number)}>
+                        Shuffle
+                    </button>
+                    <Collect player_number={player_number} collectCards={collectCards} />
+                </div>
             )}
         </div>
     )
@@ -193,7 +244,7 @@ class GetName extends React.Component {
     }
 }
 
-const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, player_number, flipCard, moveCard, flipMat, shuffleHand, is_last_stack }) => {
+const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, player_number, flipCard, moveCard, flipMat, shuffleHand, is_last_stack, collectCards }) => {
     const { player, hand, stack, mat } = player_section
     return (
         <div className='player-section'>
@@ -220,6 +271,7 @@ const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, pla
                 moveCard={moveCard}
                 flipCard={flipCard}
                 shuffleHand={shuffleHand}
+                collectCards={collectCards}
                 is_me={is_me}
             />
         </div>
@@ -246,7 +298,7 @@ const Mat = ({id, color, is_flipped, flipMat}) => {
     )
 }
 
-let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer, setName, shuffleHand}) => {
+let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer, setName, shuffleHand, collectCards}) => {
     if (me.name === null) {
         return (
             <GetName setName={setName} taken_names={room.members} />
@@ -282,7 +334,7 @@ let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer
                 {player_sections.map((player_section, player_number) => {
                     const is_me = me.player_number === player_number
                     const is_last_stack = game.last_stack_idx !== null && player_number - game.last_stack_idx === 0
-                    return <PlayerSection player_section={player_section} is_me={is_me} me={me} addPlayer={addPlayer} removePlayer={removePlayer} player_number={player_number} key={player_number} moveCard={moveCard} flipCard={flipCard} flipMat={flipMat} shuffleHand={shuffleHand} is_last_stack={is_last_stack} />
+                    return <PlayerSection player_section={player_section} is_me={is_me} me={me} addPlayer={addPlayer} removePlayer={removePlayer} player_number={player_number} key={player_number} moveCard={moveCard} flipCard={flipCard} flipMat={flipMat} shuffleHand={shuffleHand} is_last_stack={is_last_stack} collectCards={collectCards} />
                 })}
             </div>
             <div id='sidebar'>
