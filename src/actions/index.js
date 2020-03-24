@@ -10,7 +10,10 @@ function shuffle(a) {
 
 // Me
 export const setName = (name) => {
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        const { members } = getState().room
+        // Don't dispatch action if name is taken
+        if (members.includes(name)) return
         const action = {
             type: 'SET_NAME',
             name

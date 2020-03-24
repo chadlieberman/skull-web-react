@@ -146,6 +146,12 @@ class GetName extends React.Component {
 
     enterGame() {
         const { name } = this.state
+        if (this.props.taken_names.includes(name)) {
+            this.setState({
+                error: 'That name is already taken'
+            })
+            return
+        }
         if (name.length > 10) {
             this.setState({
                 error: 'Name cannot be more than ten characters'
@@ -240,7 +246,7 @@ const Mat = ({id, color, is_flipped, flipMat}) => {
 let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer, setName, shuffleHand}) => {
     if (me.name === null) {
         return (
-            <GetName setName={setName} />
+            <GetName setName={setName} taken_names={room.members} />
         )
     }
     let {discards, cards, hands, mats, stacks} = game
