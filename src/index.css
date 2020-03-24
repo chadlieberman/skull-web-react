@@ -3,6 +3,10 @@
     margin: 0;
 }
 
+div {
+    box-sizing: border-box;
+}
+
 body {
 
 }
@@ -149,6 +153,10 @@ input {
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
+}
+
+.stack.last {
+    border: 1px solid black;
 }
 
 .card {

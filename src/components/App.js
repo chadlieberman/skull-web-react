@@ -50,16 +50,16 @@ const Hand = ({ player_number, cards, moveCard, flipCard, shuffleHand, is_me }) 
     )
 }
 
-const Stack = ({ player_number, cards, moveCard, flipCard }) => {
+const Stack = ({ player_number, cards, moveCard, flipCard, is_last_stack }) => {
     const onDrop = (e) => {
         e.preventDefault()
         const card_id = e.dataTransfer.getData('draggable_id')
         const position = `player-${player_number}-stack`
-        //console.log('move card', card_id, 'to', position)
         moveCard(card_id, position)
     }
+    const class_name = is_last_stack ? 'last' : ''
     return (
-        <div className='stack'
+        <div className={`stack ${class_name}`}
             onDrop={onDrop}
             onDragOver={(e) => e.preventDefault()}
         >
@@ -85,7 +85,6 @@ const Seat = (props) => {
 const NullPlayer = ({ player_number, player, me, addPlayer }) => {
     const sitDown = () => {
         if (me.name === null) return
-        //console.log('Sitting down at position', player_number)
         addPlayer(player_number, me.name)
     }
     return (
@@ -104,7 +103,6 @@ const NullPlayer = ({ player_number, player, me, addPlayer }) => {
 
 const NonNullPlayer = ({ player_number, player, me, removePlayer }) => {
     const standUp = () => {
-        //console.log('Stand up from position', player_number)
         removePlayer(player_number)
     }
     return (
@@ -195,7 +193,7 @@ class GetName extends React.Component {
     }
 }
 
-const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, player_number, flipCard, moveCard, flipMat, shuffleHand }) => {
+const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, player_number, flipCard, moveCard, flipMat, shuffleHand, is_last_stack }) => {
     const { player, hand, stack, mat } = player_section
     return (
         <div className='player-section'>
@@ -204,6 +202,7 @@ const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, pla
                 cards={stack}
                 moveCard={moveCard}
                 flipCard={flipCard}
+                is_last_stack={is_last_stack}
             />
             <Mat {...mat}
                 flipMat={flipMat}
@@ -225,6 +224,10 @@ const PlayerSection = ({ player_section, is_me, me, addPlayer, removePlayer, pla
             />
         </div>
     )
+}
+
+PlayerSection.defaultProps = {
+    is_last_stack: false
 }
 
 const Mat = ({id, color, is_flipped, flipMat}) => {
@@ -273,13 +276,13 @@ let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer
             mat: mats[`mat_${idx}`]
         }
     })
-    //console.log('player_sections =', player_sections)
     return (
         <div id='app'>
             <div id='main'>
                 {player_sections.map((player_section, player_number) => {
                     const is_me = me.player_number === player_number
-                    return <PlayerSection player_section={player_section} is_me={is_me} me={me} addPlayer={addPlayer} removePlayer={removePlayer} player_number={player_number} key={player_number} moveCard={moveCard} flipCard={flipCard} flipMat={flipMat} shuffleHand={shuffleHand} />
+                    const is_last_stack = game.last_stack_idx !== null && player_number - game.last_stack_idx === 0
+                    return <PlayerSection player_section={player_section} is_me={is_me} me={me} addPlayer={addPlayer} removePlayer={removePlayer} player_number={player_number} key={player_number} moveCard={moveCard} flipCard={flipCard} flipMat={flipMat} shuffleHand={shuffleHand} is_last_stack={is_last_stack} />
                 })}
             </div>
             <div id='sidebar'>
