@@ -42,7 +42,8 @@ const initial_state = {
             [next.id]: next
         })
     }, {}),
-    stacks: Array(6).fill([])
+    stacks: Array(6).fill([]),
+    last_stack_idx: null,
 }
 
 const removeCard = (removed_card_id) => (card_id) => {
@@ -93,17 +94,20 @@ const game = (state = initial_state, action) => {
         case 'MOVE_CARD':
             if (card_id === null || card_id === '') return state
             if (to_position === null || card_id === null || to_position === '' || card_id === '') return state
-            //console.log('MOVE_CARD', card_id, 'to', to_position)
             // Remove the card from where it is now
             let cards = state.cards
+            let last_stack_idx = state.last_stack_idx
             const card_color = cards[card_id].color
             discards = state.discards.filter(filterOutCard(card_id))
             hands = state.hands.map(hand => {
                 return hand.map(removeCard(card_id))
             })
-            stacks = state.stacks.map(stack => {
+            stacks = state.stacks.map((stack, idx) => {
                 return stack.filter(filterOutCard(card_id))
             })
+            if (last_stack_idx && !stacks[last_stack_idx].length) {
+                last_stack_idx = null
+            }
             // Put the card in it's to_position
             if (to_position.includes('discard')) {
                 discards.push(card_id)
@@ -112,8 +116,8 @@ const game = (state = initial_state, action) => {
                 found = to_position.match(STACK_RE)
                 let { player_number } = found.groups
                 if (COLORS[player_number] !== card_color) return state
-                //console.log('player_number', player_number)
                 stacks[player_number].push(card_id)
+                last_stack_idx = player_number
             } else if (to_position.includes('hand')) {
                 found = to_position.match(HAND_RE)
                 let { player_number, hand_position } = found.groups
@@ -123,12 +127,12 @@ const game = (state = initial_state, action) => {
             } else {
                 console.error(`Could not move card ${card_id} to ${to_position}`)
             }
-            //console.log('stacks =', stacks)
             return Object.assign({}, state, {
                 discards,
                 hands,
                 stacks,
-                cards
+                cards,
+                last_stack_idx,
             })
 
         case 'SHUFFLE_HAND':
