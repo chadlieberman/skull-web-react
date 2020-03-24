@@ -34,8 +34,12 @@ button:hover {
     min-height: 40px;
 }
 
-button.shuffle {
-    margin-top: 10px;
+.hand-actions {
+    text-align: center;
+}
+
+.hand-actions > button {
+    margin-top: 5px;
 }
 
 #main {

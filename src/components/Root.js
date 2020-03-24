@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Provider, connect } from 'react-redux'
 import App from './App'
 
-import { moveCard, flipCard, flipMat, addPlayer, removePlayer, setName, shuffleHand } from '../actions'
+import { moveCard, flipCard, flipMat, addPlayer, removePlayer, setName, shuffleHand, collectCards } from '../actions'
 
 const Header = () => (
     <div id='header'>
@@ -40,6 +40,7 @@ Container = connect(
             setName: (name) => dispatch(setName(name)),
             flipMat: (mat_id) => dispatch(flipMat(mat_id)),
             shuffleHand: (player_number) => dispatch(shuffleHand(player_number)),
+            collectCards: (player_number) => dispatch(collectCards(player_number)),
         }
     }
 )(Container)
