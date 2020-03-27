@@ -62,6 +62,9 @@ const handleConnect = (socket) => {
     socket.on('disconnect', handleDisconnect(socket))
     socket.on('action', handleAction(socket))
     const state = store.getState()
+    socket.emit('connected', {
+        connected_at: Date.now()
+    })
     socket.emit('action', {
         type: 'REPLACE',
         game: state.game,

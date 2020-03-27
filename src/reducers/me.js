@@ -18,6 +18,8 @@ const me = (state = initial_state, action) => {
                 return Object.assign({}, state, { player_number: null })
             }
             return state
+        case 'REPLACE':
+            return Object.assign({}, state, { player_number: null })
         default:
             return state
     }

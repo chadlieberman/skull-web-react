@@ -11,6 +11,13 @@ const Header = () => (
     </div>
 )
 
+const Connecting = () => (
+    <div id='connecting'>
+        <h2>Connecting...</h2>
+        <p>Your connection to the server has been interrupted. Please wait 1 minute to see if you reconnect automatically. If not, try <a onClick={() => window.location.reload()}>reloading</a>.</p>
+    </div>
+)
+
 class Container extends React.Component {
 
     componentDidMount() {
@@ -18,10 +25,14 @@ class Container extends React.Component {
     }
 
     render() {
+        console.log('props = ', this.props)
         return (
             <div>
                 <Header />
                 <App {...this.props} />
+                {!this.props.connection.is_connected && (
+                    <Connecting />
+                )}
             </div>
         )
     }
