@@ -11,7 +11,6 @@ function shuffle(a) {
 // Me
 export const setName = (name) => {
     return (dispatch, getState) => {
-        const { members } = getState().room
         const action = {
             type: 'SET_NAME',
             name
@@ -79,7 +78,7 @@ export const shuffleHand = (player_number) => {
         const action = {
             type: 'SHUFFLE_HAND',
             player_number,
-            perm: shuffle([0, 1, 2, 3]) 
+            perm: shuffle([0, 1, 2, 3])
         }
         socket.emit('action', action)
         dispatch(action)
@@ -109,3 +108,21 @@ export const collectCards = (player_number) => {
     }
 }
 
+export const setNotification = (notification_type, message) => {
+    return (dispatch) => {
+        const action = {
+            type: 'SET_NOTIFICATION',
+            notification_type,
+            message
+        }
+        dispatch(action)
+    }
+}
+
+export const resetNotification = () => {
+    return (dispatch) => {
+        dispatch({
+            type: 'RESET_NOTIFICATION'
+        })
+    }
+}

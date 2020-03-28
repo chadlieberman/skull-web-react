@@ -11,27 +11,27 @@ const Header = () => (
     </div>
 )
 
-const Connecting = () => (
-    <div id='connecting'>
-        <h2>Connecting...</h2>
-        <p>Your connection to the server has been interrupted. Please wait 1 minute to see if you reconnect automatically. If not, try <a onClick={() => window.location.reload()}>reloading</a>.</p>
+const Notification = ({ notification_type, message }) => (
+    <div id='notification' className={notification_type}>
+        <p>{message}</p>
     </div>
 )
 
 class Container extends React.Component {
 
     componentDidMount() {
-        console.log('Container.componentDidMount')
+        //console.log('Container.componentDidMount')
+        //console.log('this.props.connection.is_connected', this.props.connection.is_connected)
     }
 
     render() {
-        console.log('props = ', this.props)
+        //console.log('props = ', this.props)
         return (
             <div>
                 <Header />
                 <App {...this.props} />
-                {!this.props.connection.is_connected && (
-                    <Connecting />
+                {this.props.notification.message && (
+                    <Notification {...this.props.notification} />
                 )}
             </div>
         )
