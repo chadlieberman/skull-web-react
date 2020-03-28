@@ -8,7 +8,13 @@ import KefirBus from 'kefir-bus'
 import { combineReducers, createStore, applyMiddleware } from 'redux'
 import game from './src/reducers/game'
 import room from './src/reducers/room'
-let saved = require('./.data-store.json')
+let saved = {
+    game: null,
+    room: null
+}
+if (fs.existsSync('./.data-store.json')) {
+    saved = require('./.data-store.json')
+}
 
 let app = express()
 const server = http.Server(app)
