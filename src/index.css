@@ -8,7 +8,8 @@ div {
 }
 
 body {
-
+    position: relative;
+    z-index: 0;
 }
 
 h2 {
@@ -32,6 +33,19 @@ button:hover {
 .buttons {
     text-align: center;
     min-height: 40px;
+}
+
+#connecting {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    max-width: 50%;
+    max-height: 30%;
+    background-color: white;
+    box-shadow: 3px 5px #ababab;
+    padding: 20px;
 }
 
 .hand-actions {
@@ -256,6 +270,61 @@ input {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
+}
+
+#notification {
+    position: fixed;
+    z-index: 2;
+    left: -2px;
+    top: 50px;
+    animation: slide-in 0.4s ease;
+    background-color: white;
+    border: 1px solid black;
+    color: black;
+}
+
+#notification.info {
+    background-color: #faf3ca;
+    border: 1px solid #918500;
+    color: #918500;
+}
+
+#notification.success {
+    background-color: #c4f2c8;
+    border: 1px solid #0c7500;
+    color: #0c7500;
+}
+
+#notification.error {
+    background-color: #fabbbb;
+    border: 1px solid #c20000;
+    color: #c20000;
+}
+
+#notification p {
+    padding: 10px 80px;
+}
+
+#notification.hidden {
+    animation: slide-out 0.4s ease;
+}
+
+@keyframes slide-in {
+    0% {
+        transform: translateX(-500px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+@keyframes slide-out {
+    0% {
+        transform: translateX(0px);
+    }
+    100% {
+        transform: translateX(-500px);
+    }
 }
 
 .green {

@@ -184,7 +184,7 @@ class GetName extends React.Component {
     }
 
     componentDidMount() {
-        console.log('GetName.componentDidMount()')
+        //console.log('GetName.componentDidMount()')
     }
 
     onChangeName(e) {
@@ -224,21 +224,29 @@ class GetName extends React.Component {
 
     render() {
         const { name, error } = this.state
+        const { connection } = this.props
         return (
             <div id='intro'>
                 <h1>Skull</h1>
                 <img alt={'skull'} src={'/static/img/skull.png'} />
                 <h3>It is always a skull</h3>
-                <div id='set-name'>
-                    <p>Enter your name (only use [a-z])</p>
-                    <input type='text' value={name} onChange={this.onChangeName} />
-                    <button onClick={this.enterGame}>
-                        Enter
-                    </button>
-                    {error && (
-                        <div className='error'>{error}</div>
-                    )}
-                </div>
+                {connection.is_connected && (
+                    <div id='set-name'>
+                        <p>Enter your name (only use [a-z])</p>
+                        <input type='text' value={name} onChange={this.onChangeName} />
+                        <button onClick={this.enterGame}>
+                            Enter
+                        </button>
+                        {error && (
+                            <div className='error'>{error}</div>
+                        )}
+                    </div>
+                )}
+                {!connection.is_connected && (
+                    <div id='set-name'>
+                        <h3>Connecting...</h3>
+                    </div>
+                )}
             </div>
         )
     }
@@ -298,10 +306,10 @@ const Mat = ({id, color, is_flipped, flipMat}) => {
     )
 }
 
-let App = ({me, room, game, moveCard, flipCard, flipMat, addPlayer, removePlayer, setName, shuffleHand, collectCards}) => {
+let App = ({me, room, game, connection, moveCard, flipCard, flipMat, addPlayer, removePlayer, setName, shuffleHand, collectCards}) => {
     if (me.name === null) {
         return (
-            <GetName setName={setName} taken_names={room.members} />
+            <GetName setName={setName} taken_names={room.members} connection={connection} />
         )
     }
     let {discards, cards, hands, mats, stacks} = game

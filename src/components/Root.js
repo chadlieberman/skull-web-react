@@ -11,17 +11,28 @@ const Header = () => (
     </div>
 )
 
+const Notification = ({ notification_type, message }) => (
+    <div id='notification' className={notification_type}>
+        <p>{message}</p>
+    </div>
+)
+
 class Container extends React.Component {
 
     componentDidMount() {
-        console.log('Container.componentDidMount')
+        //console.log('Container.componentDidMount')
+        //console.log('this.props.connection.is_connected', this.props.connection.is_connected)
     }
 
     render() {
+        //console.log('props = ', this.props)
         return (
             <div>
                 <Header />
                 <App {...this.props} />
+                {this.props.notification.message && (
+                    <Notification {...this.props.notification} />
+                )}
             </div>
         )
     }
